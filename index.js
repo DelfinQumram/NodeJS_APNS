@@ -19,7 +19,7 @@ const settings = {
         //     teamId: 'EFGH',
         // },
         cert: './certs/devCert.pem',
-        // key: './certs/devKey.pem',
+        key: './certs/devKey.pem',
         passphrase :'qumram',
         production : false
     }
@@ -34,9 +34,9 @@ const push = new PushNotifications(settings);
 // push data
 const data = {
     title: 'New push notification', // REQUIRED 
-    body: 'Powered by AppFeel', // REQUIRED 
+    body: 'This push has been sent from a nodeJS app ', // REQUIRED 
     custom: {
-        sender: 'AppFeel',
+        sender: 'Qumram',
     },
     priority: 'high', // gcm, apn. Supported values are 'high' or 'normal' (gcm). Will be translated to 10 and 5 for apn. Defaults to 'high' 
     collapseKey: '', // gcm for android, used as collapseId in apn 
@@ -54,7 +54,7 @@ const data = {
     titleLocArgs: '', // gcm, apn 
     retries: 1, // gcm, apn 
     encoding: '', // apn 
-    badge: 2, // gcm for ios, apn 
+    badge: 1, // gcm for ios, apn 
     // alert: '', // It is also accepted a text message in alert 
     titleLocKey: '', // apn and gcm for ios 
     titleLocArgs: '', // apn and gcm for ios 
@@ -71,8 +71,7 @@ const data = {
 
 // Push destination devices
 const registrationIds = [];
-registrationIds.push('f43abe6fb70545a0d80b88e3cf1329ec7f42b35a');
-registrationIds.push('801441d435155c0c869b0c03192d6325dc05020d');
+registrationIds.push('2eac69a08879fe893475e83860b339b4c8af1aa5fd52cf613b709d5a270d22fa');
 
 //------------------------------------------------------------------------------
 // Send push!!!
@@ -81,12 +80,19 @@ push.send(registrationIds, data, (err, result) => {
     if (err) {
         console.log(err);
     } else {
-      const answer = result[0];
-      if ( answer.failure >= 0 ){
-        console.log(answer.message);        
-      } else {
-        console.log("Lo logre!!!!");
-      }
+        for (var i = 0; i < result.length; i++ ){
+            let platform = result[i];
+            console.log("Method is: " + platform.method);
+            for (var j = 0; j < platform.message.length; j++ ){
+                let message = platform.message[i];
+                if ( message.error != null ){
+                    console.log("Error sending to device: " + message.regId);
+                    console.log("Error: " + message.error);
+                } else {
+                    console.log("Push notification successfully sent to device: " + message.regId.device );
+                }
+            }
+        }
     }
 });
 
