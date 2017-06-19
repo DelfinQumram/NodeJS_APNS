@@ -10,6 +10,7 @@
   "author": "Delfin Pereiro",
   "license": "ISC",
   "dependencies": {
+    "apn": "^2.1.4",
     "express": "^4.15.3",
     "node-pushnotifications": "^1.0.18"
   }
